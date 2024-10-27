@@ -33,7 +33,7 @@ const HomePage = () => {
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      minHeight="100vh"
+      minHeight="70vh"
     >
       <Typography variant="h4" gutterBottom>
         Welcome to Our App
