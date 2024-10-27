@@ -9,6 +9,7 @@ export const GET_USERS_QUERY = gql`
         email
         name
         mobile
+        college
         idCard
         receipt
         transactionID

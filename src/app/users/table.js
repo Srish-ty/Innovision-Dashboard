@@ -8,9 +8,27 @@ import {
   TableRow,
   Paper,
   Typography,
+  Switch,
 } from "@mui/material";
+import { useMutation } from "@apollo/client";
+import { UPDATE_USER_MUTATION } from "@/graphQL/updateUser";
 
 const TableComponent = ({ users }) => {
+  const [updateUser] = useMutation(UPDATE_USER_MUTATION);
+
+  const handleToggle = async (userId, currentStatus) => {
+    try {
+      const variables = {
+        user: { hasPaid: !currentStatus },
+        updateUserId: userId,
+      };
+      await updateUser({ variables });
+      console.log(`User with ID ${userId} updated successfully`);
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -40,8 +58,8 @@ const TableComponent = ({ users }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((user, index) => (
-            <TableRow key={index}>
+          {users.map((user) => (
+            <TableRow key={user.id}>
               <TableCell>{user.name}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.mobile}</TableCell>
@@ -60,7 +78,14 @@ const TableComponent = ({ users }) => {
                 </a>
               </TableCell>
               <TableCell>{user.transactionID}</TableCell>
-              <TableCell>{user.hasPaid ? "Yes" : "No"}</TableCell>
+              <TableCell>
+                <Switch
+                  checked={user.hasPaid}
+                  onChange={() => handleToggle(user.id, user.hasPaid)}
+                  color="primary"
+                />
+                {user.hasPaid ? "Yes" : "No"}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
