@@ -1,15 +1,26 @@
 "use client";
 
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_USERS_QUERY } from "@/graphQL/getUsers";
 import TableComponent from "./table";
 import { CircularProgress, Typography, Box } from "@mui/material";
 
 const Users = () => {
+  const [currentUser, setCurrentUser] = useState(null);
   const { loading, error, data } = useQuery(GET_USERS_QUERY, {
     variables: { orgId: "671bb67e578281c65287a545" },
   });
+
+  useEffect(() => {
+    const userEmail = localStorage.getItem("firebaseUserEmail");
+    const userUID = localStorage.getItem("firebaseUserUID");
+    if (userEmail && userUID) {
+      const user = { email: userEmail, uid: userUID };
+      console.log(user);
+      setCurrentUser(user);
+    }
+  }, []);
 
   if (loading) return <CircularProgress />;
   if (error)
@@ -20,8 +31,7 @@ const Users = () => {
       <Typography variant="h4" gutterBottom>
         Users
       </Typography>
-      <TableComponent users={data.user.data} />
-      {console.log(data.user.data[0])}
+      <TableComponent users={data.user.data} loggedInUser={currentUser} />
     </Box>
   );
 };

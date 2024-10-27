@@ -12,6 +12,8 @@ const HomePage = () => {
     if (user) {
       setUser(user);
       localStorage.setItem("firebaseIdToken", idToken);
+      localStorage.setItem("firebaseUserEmail", user.email);
+      localStorage.setItem("firebaseUserUID", user.uid);
     }
   };
 
@@ -20,6 +22,8 @@ const HomePage = () => {
     if (signOutResult) {
       setUser(null);
       localStorage.removeItem("firebaseIdToken");
+      localStorage.removeItem("firebaseUserEmail");
+      localStorage.removeItem("firebaseUserUID");
     }
   };
 
