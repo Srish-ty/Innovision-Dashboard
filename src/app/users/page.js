@@ -28,9 +28,6 @@ const Users = () => {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
-        Users
-      </Typography>
       <TableComponent users={data.user.data} loggedInUser={currentUser} />
     </Box>
   );

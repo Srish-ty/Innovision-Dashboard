@@ -47,12 +47,12 @@ const HomePage = () => {
       minHeight="70vh"
     >
       <Typography variant="h4" gutterBottom>
-        Welcome to Our App
+        Welcome to Innovision DashBoard
       </Typography>
       {user ? (
         <>
           <Typography variant="body1">
-            Signed in as: {user.email}
+            Signed in as: <span className="text-teal-500"> {user.email} </span>
             {console.log(user)}
           </Typography>
           <Button variant="contained" color="secondary" onClick={handleSignOut}>

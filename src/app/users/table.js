@@ -175,7 +175,7 @@ const TableComponent = ({ users, loggedInUser }) => {
           severity="error"
           sx={{ width: "100%" }}
         >
-          You're not authorized to change this!
+          You&apos;re not authorized to change this!
         </Alert>
       </Snackbar>
     </>

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { NavData } from "@/config/data/navData";
 import { signInWithGoogle, signOutUser } from "@/firebase/auth";
+import { Button } from "@mui/material";
 
 export const Navbar = () => {
   const [user, setUser] = useState(null);
@@ -51,19 +52,23 @@ export const Navbar = () => {
         </a>
       ))}
       {user ? (
-        <button
+        <Button
+          variant="contained"
+          color="secondary"
           onClick={handleSignOut}
-          className="text-teal-500 hover:text-white"
+          className="text-white"
         >
           Logout
-        </button>
+        </Button>
       ) : (
-        <button
+        <Button
+          variant="contained"
+          color="primary"
           onClick={handleSignIn}
-          className="text-teal-500 hover:text-white"
+          className="text-white"
         >
           Login
-        </button>
+        </Button>
       )}
     </nav>
   );
