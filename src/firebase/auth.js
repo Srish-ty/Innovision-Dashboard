@@ -1,14 +1,15 @@
-import { signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
-import { auth } from './firebase';
+import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { auth } from "./firebase";
 
 export const signInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
   try {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
-    return user;
+    const idToken = await user.getIdToken();
+    return { user, idToken };
   } catch (error) {
-    console.error('Error signing in with Google:', error);
+    console.error("Error signing in with Google:", error);
     return false;
   }
 };
@@ -18,7 +19,7 @@ export const signOutUser = async () => {
     await signOut(auth);
     return {};
   } catch (error) {
-    console.error('Error signing out:', error);
+    console.error("Error signing out:", error);
     return false;
   }
 };
