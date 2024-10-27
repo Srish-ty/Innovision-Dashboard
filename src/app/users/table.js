@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { useMutation } from "@apollo/client";
 import { UPDATE_USER_MUTATION } from "@/graphQL/updateUser";
+import colleges from "@/config/data/colleges";
 
 const TableComponent = ({ users }) => {
   const [updateUser] = useMutation(UPDATE_USER_MUTATION);
@@ -44,6 +45,9 @@ const TableComponent = ({ users }) => {
               <Typography variant="h6">Mobile</Typography>
             </TableCell>
             <TableCell>
+              <Typography variant="h6">College</Typography>
+            </TableCell>
+            <TableCell>
               <Typography variant="h6">ID Card</Typography>
             </TableCell>
             <TableCell>
@@ -63,6 +67,7 @@ const TableComponent = ({ users }) => {
               <TableCell>{user.name}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.mobile}</TableCell>
+              <TableCell>{colleges[user.college] || "Unknown"}</TableCell>
               <TableCell>
                 <a href={user.idCard} target="_blank" rel="noopener noreferrer">
                   View ID Card

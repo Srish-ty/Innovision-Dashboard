@@ -37,7 +37,7 @@ const HomePage = () => {
       {user ? (
         <>
           <Typography variant="body1">
-            Signed in as: {user.displayName}
+            Signed in as: {user.email}
             {console.log(user)}
           </Typography>
           <Button variant="contained" color="secondary" onClick={handleSignOut}>
