@@ -11,6 +11,8 @@ import {
   Switch,
   Snackbar,
   Alert,
+  TextField,
+  Box,
 } from "@mui/material";
 import { useMutation } from "@apollo/client";
 import { UPDATE_USER_MUTATION } from "@/graphQL/updateUser";
@@ -19,6 +21,7 @@ import colleges from "@/config/data/colleges";
 const TableComponent = ({ users, loggedInUser }) => {
   const [updateUser] = useMutation(UPDATE_USER_MUTATION);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleToggle = async (userId, currentStatus) => {
     const authorizedUsers = [
@@ -49,8 +52,29 @@ const TableComponent = ({ users, loggedInUser }) => {
     setSnackbarOpen(false);
   };
 
+  const filteredUsers = users.filter((user) => {
+    return (
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.mobile.toString().includes(searchTerm) ||
+      (colleges[user.college] || "Unknown")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
+  });
+
   return (
     <>
+      <Box sx={{ mb: 2 }}>
+        <TextField
+          label="Search"
+          variant="outlined"
+          fullWidth
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </Box>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -98,7 +122,7 @@ const TableComponent = ({ users, loggedInUser }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
+            {filteredUsers.map((user) => (
               <TableRow key={user.id}>
                 <TableCell sx={{ padding: "4px" }}>{user.name}</TableCell>
                 <TableCell sx={{ padding: "4px" }}>{user.email}</TableCell>
