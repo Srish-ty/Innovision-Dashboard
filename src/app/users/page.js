@@ -21,6 +21,7 @@ const Users = () => {
         Users
       </Typography>
       <TableComponent users={data.user.data} />
+      {console.log(data.user.data[0])}
     </Box>
   );
 };
