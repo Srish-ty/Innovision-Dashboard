@@ -54,41 +54,59 @@ const TableComponent = ({ users, loggedInUser }) => {
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>
-                <Typography variant="h6">Name</Typography>
+            <TableRow sx={{ backgroundColor: "#1976d2" }}>
+              <TableCell sx={{ padding: "8px" }}>
+                <Typography variant="h6" sx={{ color: "#ffffff" }}>
+                  Name
+                </Typography>
               </TableCell>
-              <TableCell>
-                <Typography variant="h6">Email</Typography>
+              <TableCell sx={{ padding: "8px" }}>
+                <Typography variant="h6" sx={{ color: "#ffffff" }}>
+                  Email
+                </Typography>
               </TableCell>
-              <TableCell>
-                <Typography variant="h6">Mobile</Typography>
+              <TableCell sx={{ padding: "8px" }}>
+                <Typography variant="h6" sx={{ color: "#ffffff" }}>
+                  Mobile
+                </Typography>
               </TableCell>
-              <TableCell>
-                <Typography variant="h6">College</Typography>
+              <TableCell sx={{ padding: "8px" }}>
+                <Typography variant="h6" sx={{ color: "#ffffff" }}>
+                  College
+                </Typography>
               </TableCell>
-              <TableCell>
-                <Typography variant="h6">ID Card</Typography>
+              <TableCell sx={{ padding: "8px" }}>
+                <Typography variant="h6" sx={{ color: "#ffffff" }}>
+                  ID Card
+                </Typography>
               </TableCell>
-              <TableCell>
-                <Typography variant="h6">Receipt</Typography>
+              <TableCell sx={{ padding: "8px" }}>
+                <Typography variant="h6" sx={{ color: "#ffffff" }}>
+                  Receipt
+                </Typography>
               </TableCell>
-              <TableCell>
-                <Typography variant="h6">Transaction ID</Typography>
+              <TableCell sx={{ padding: "8px" }}>
+                <Typography variant="h6" sx={{ color: "#ffffff" }}>
+                  Transaction ID
+                </Typography>
               </TableCell>
-              <TableCell>
-                <Typography variant="h6">Has Paid</Typography>
+              <TableCell sx={{ padding: "8px" }}>
+                <Typography variant="h6" sx={{ color: "#ffffff" }}>
+                  Has Paid
+                </Typography>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {users.map((user) => (
               <TableRow key={user.id}>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.mobile}</TableCell>
-                <TableCell>{colleges[user.college] || "Unknown"}</TableCell>
-                <TableCell>
+                <TableCell sx={{ padding: "4px" }}>{user.name}</TableCell>
+                <TableCell sx={{ padding: "4px" }}>{user.email}</TableCell>
+                <TableCell sx={{ padding: "4px" }}>{user.mobile}</TableCell>
+                <TableCell sx={{ padding: "4px" }}>
+                  {colleges[user.college] || "Unknown"}
+                </TableCell>
+                <TableCell sx={{ padding: "4px" }}>
                   <a
                     href={user.idCard}
                     target="_blank"
@@ -97,7 +115,7 @@ const TableComponent = ({ users, loggedInUser }) => {
                     View ID Card
                   </a>
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ padding: "4px" }}>
                   <a
                     href={user.receipt}
                     target="_blank"
@@ -106,8 +124,10 @@ const TableComponent = ({ users, loggedInUser }) => {
                     View Receipt
                   </a>
                 </TableCell>
-                <TableCell>{user.transactionID}</TableCell>
-                <TableCell>
+                <TableCell sx={{ padding: "4px" }}>
+                  {user.transactionID}
+                </TableCell>
+                <TableCell sx={{ padding: "4px" }}>
                   <Switch
                     checked={user.hasPaid}
                     onChange={() => handleToggle(user.id, user.hasPaid)}
