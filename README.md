@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## VIsit website at
+### [https://innovision-dashboard.vercel.app/](https://innovision-dashboard.vercel.app/)
+### [https://dashboard-inno.netlify.app/](https://dashboard-inno.netlify.app/)
 
 ## Getting Started
 
