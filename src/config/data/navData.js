@@ -9,9 +9,4 @@ export const NavData = [
     text: "Users",
     url: "/users",
   },
-  {
-    id: 3,
-    text: "Logout",
-    url: "/",
-  },
 ];

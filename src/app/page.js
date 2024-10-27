@@ -1,11 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { signInWithGoogle, signOutUser } from "@/firebase/auth";
 import { Button, Typography, Box } from "@mui/material";
 
 const HomePage = () => {
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const idToken = localStorage.getItem("firebaseIdToken");
+    const userEmail = localStorage.getItem("firebaseUserEmail");
+    const userUID = localStorage.getItem("firebaseUserUID");
+
+    if (idToken && userEmail && userUID) {
+      setUser({ email: userEmail, uid: userUID });
+    }
+  }, []);
 
   const handleSignIn = async () => {
     const { user, idToken } = await signInWithGoogle();
@@ -15,6 +25,7 @@ const HomePage = () => {
       localStorage.setItem("firebaseUserEmail", user.email);
       localStorage.setItem("firebaseUserUID", user.uid);
     }
+    window.location.href = "/users";
   };
 
   const handleSignOut = async () => {
