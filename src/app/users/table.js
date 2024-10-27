@@ -45,8 +45,20 @@ const TableComponent = ({ users }) => {
               <TableCell>{user.name}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.mobile}</TableCell>
-              <TableCell>{user.idCard}</TableCell>
-              <TableCell>{user.receipt}</TableCell>
+              <TableCell>
+                <a href={user.idCard} target="_blank" rel="noopener noreferrer">
+                  View ID Card
+                </a>
+              </TableCell>
+              <TableCell>
+                <a
+                  href={user.receipt}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View Receipt
+                </a>
+              </TableCell>
               <TableCell>{user.transactionID}</TableCell>
               <TableCell>{user.hasPaid ? "Yes" : "No"}</TableCell>
             </TableRow>
