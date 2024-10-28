@@ -135,6 +135,7 @@ const TableComponent = ({ users, loggedInUser }) => {
                     href={user.idCard}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="text-blue-500 underline hover:text-blue-700"
                   >
                     View ID Card
                   </a>
@@ -144,6 +145,7 @@ const TableComponent = ({ users, loggedInUser }) => {
                     href={user.receipt}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="text-teal-500 underline hover:text-teal-700"
                   >
                     View Receipt
                   </a>
