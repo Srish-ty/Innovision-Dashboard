@@ -141,17 +141,23 @@ const TableComponent = ({ users, loggedInUser }) => {
                   </a>
                 </TableCell>
                 <TableCell sx={{ padding: "4px" }}>
-                  <a
-                    href={user.receipt}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-teal-500 underline hover:text-teal-700"
-                  >
-                    View Receipt
-                  </a>
+                  {user.receipt ? (
+                    <a
+                      href={user.receipt}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-teal-500 underline hover:text-teal-700"
+                    >
+                      View Receipt
+                    </a>
+                  ) : (
+                    ""
+                  )}
                 </TableCell>
                 <TableCell sx={{ padding: "4px" }}>
-                  {user.transactionID}
+                  {user.transactionID || (
+                    <span className="text-gray-300">NITR Student</span>
+                  )}
                 </TableCell>
                 <TableCell sx={{ padding: "4px" }}>
                   <Switch
