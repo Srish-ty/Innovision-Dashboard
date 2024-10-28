@@ -29,6 +29,7 @@ const Users = () => {
   return (
     <Box>
       <TableComponent users={data.user.data} loggedInUser={currentUser} />
+      {localStorage.setItem("totalUsers", data.user.data.length)}
     </Box>
   );
 };

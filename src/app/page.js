@@ -1,11 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useQuery } from "@apollo/client";
+import { GET_USERS_QUERY } from "@/graphQL/getUsers";
 import { signInWithGoogle, signOutUser } from "@/firebase/auth";
 import { Button, Typography, Box } from "@mui/material";
 
 const HomePage = () => {
   const [user, setUser] = useState(null);
+
+  const { loading, error, data } = useQuery(GET_USERS_QUERY, {
+    variables: { orgId: "671bb67e578281c65287a545" },
+  });
 
   useEffect(() => {
     const idToken = localStorage.getItem("firebaseIdToken");
@@ -24,6 +30,7 @@ const HomePage = () => {
       localStorage.setItem("firebaseIdToken", idToken);
       localStorage.setItem("firebaseUserEmail", user.email);
       localStorage.setItem("firebaseUserUID", user.uid);
+      localStorage.setItem("totalUsers", data.user.data.length);
     }
     window.location.href = "/users";
   };
@@ -35,6 +42,7 @@ const HomePage = () => {
       localStorage.removeItem("firebaseIdToken");
       localStorage.removeItem("firebaseUserEmail");
       localStorage.removeItem("firebaseUserUID");
+      localStorage.removeItem("totalUsers");
     }
   };
 
@@ -48,6 +56,12 @@ const HomePage = () => {
     >
       <Typography variant="h4" gutterBottom>
         Welcome to Innovision DashBoard
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        Total Users:
+        <span className="text-violet-600 p-3 m-2">
+          {data?.user?.data.length}
+        </span>
       </Typography>
       {user ? (
         <>
