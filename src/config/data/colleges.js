@@ -63,6 +63,9 @@ const colleges = {
     "Trident Academy of Technology, Bhubaneswar (Trident BBSR)",
   "671a5be86748c70b7f893cce":
     "Indian Institute of Engineering Science and Technology, Shibpur (IIEST Shibpur)",
+  "671dbcedcf42c86749354b8d": "Siksha 'O' Anusandhan",
+  "671e4252cf42c86749354c1c": "VIT-AP University",
+  "671f3014cf42c86749354c3c": "MITS School Of Biotechnology (MSB), Bhubaneswar",
 };
 
 export default colleges;
