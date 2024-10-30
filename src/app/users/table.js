@@ -22,6 +22,7 @@ const TableComponent = ({ users, loggedInUser }) => {
   const [updateUser] = useMutation(UPDATE_USER_MUTATION);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  var sr_no = 1;
 
   const handleToggle = async (userId, currentStatus) => {
     const authorizedUsers = [
@@ -81,6 +82,11 @@ const TableComponent = ({ users, loggedInUser }) => {
             <TableRow sx={{ backgroundColor: "#1976d2" }}>
               <TableCell sx={{ padding: "8px" }}>
                 <Typography variant="h6" sx={{ color: "#ffffff" }}>
+                  Sr. No.
+                </Typography>
+              </TableCell>
+              <TableCell sx={{ padding: "8px" }}>
+                <Typography variant="h6" sx={{ color: "#ffffff" }}>
                   Name
                 </Typography>
               </TableCell>
@@ -122,53 +128,55 @@ const TableComponent = ({ users, loggedInUser }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredUsers.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell sx={{ padding: "4px" }}>{user.name}</TableCell>
-                <TableCell sx={{ padding: "4px" }}>{user.email}</TableCell>
-                <TableCell sx={{ padding: "4px" }}>{user.mobile}</TableCell>
-                <TableCell sx={{ padding: "4px" }}>
-                  {colleges[user.college] || "Unknown"}
-                </TableCell>
-                <TableCell sx={{ padding: "4px" }}>
-                  <a
-                    href={user.idCard}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 underline hover:text-blue-700"
-                  >
-                    View ID Card
-                  </a>
-                </TableCell>
-                <TableCell sx={{ padding: "4px" }}>
-                  {user.receipt ? (
-                    <a
-                      href={user.receipt}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-teal-500 underline hover:text-teal-700"
-                    >
-                      View Receipt
-                    </a>
-                  ) : (
-                    ""
-                  )}
-                </TableCell>
-                <TableCell sx={{ padding: "4px" }}>
-                  {user.transactionID || (
-                    <span className="text-gray-300">NITR Student</span>
-                  )}
-                </TableCell>
-                <TableCell sx={{ padding: "4px" }}>
-                  <Switch
-                    checked={user.hasPaid}
-                    onChange={() => handleToggle(user.id, user.hasPaid)}
-                    color="primary"
-                  />
-                  {user.hasPaid ? "Yes" : "No"}
-                </TableCell>
-              </TableRow>
-            ))}
+            {filteredUsers.map(
+              (user) =>
+                user.college != "671a5be76748c70b7f893ccb" && (
+                  <TableRow key={user.id}>
+                    <TableCell sx={{ padding: "4px" }}>{sr_no++}</TableCell>
+                    <TableCell sx={{ padding: "4px" }}>{user.name}</TableCell>
+                    <TableCell sx={{ padding: "4px" }}>{user.email}</TableCell>
+                    <TableCell sx={{ padding: "4px" }}>{user.mobile}</TableCell>
+                    <TableCell sx={{ padding: "4px" }}>
+                      {colleges[user.college] || "Unknown"}
+                    </TableCell>
+                    <TableCell sx={{ padding: "4px" }}>
+                      <a
+                        href={user.idCard}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 underline hover:text-blue-700"
+                      >
+                        View ID Card
+                      </a>
+                    </TableCell>
+                    <TableCell sx={{ padding: "4px" }}>
+                      {user.receipt ? (
+                        <a
+                          href={user.receipt}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-teal-500 underline hover:text-teal-700"
+                        >
+                          View Receipt
+                        </a>
+                      ) : (
+                        ""
+                      )}
+                    </TableCell>
+                    <TableCell sx={{ padding: "4px" }}>
+                      {user.transactionID}
+                    </TableCell>
+                    <TableCell sx={{ padding: "4px" }}>
+                      <Switch
+                        checked={user.hasPaid}
+                        onChange={() => handleToggle(user.id, user.hasPaid)}
+                        color="primary"
+                      />
+                      {user.hasPaid ? "Yes" : "No"}
+                    </TableCell>
+                  </TableRow>
+                )
+            )}
           </TableBody>
         </Table>
       </TableContainer>
