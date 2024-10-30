@@ -22,7 +22,8 @@ const TableComponent = ({ users, loggedInUser }) => {
   const [updateUser] = useMutation(UPDATE_USER_MUTATION);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  var sr_no = 1;
+  const [localUsers, setLocalUsers] = useState(users);
+  let sr_no = 1;
 
   const handleToggle = async (userId, currentStatus) => {
     const authorizedUsers = [
@@ -40,6 +41,13 @@ const TableComponent = ({ users, loggedInUser }) => {
           updateUserId: userId,
         };
         await updateUser({ variables });
+
+        setLocalUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.id === userId ? { ...user, hasPaid: !currentStatus } : user
+          )
+        );
+
         console.log(`User with ID ${userId} updated successfully`);
       } catch (error) {
         console.error("Error updating user:", error);
@@ -53,7 +61,7 @@ const TableComponent = ({ users, loggedInUser }) => {
     setSnackbarOpen(false);
   };
 
-  const filteredUsers = users.filter((user) => {
+  const filteredUsers = localUsers.filter((user) => {
     return (
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -130,7 +138,7 @@ const TableComponent = ({ users, loggedInUser }) => {
           <TableBody>
             {filteredUsers.map(
               (user) =>
-                user.college != "671a5be76748c70b7f893ccb" && (
+                user.college !== "671a5be76748c70b7f893ccb" && (
                   <TableRow key={user.id}>
                     <TableCell sx={{ padding: "4px" }}>{sr_no++}</TableCell>
                     <TableCell sx={{ padding: "4px" }}>{user.name}</TableCell>
