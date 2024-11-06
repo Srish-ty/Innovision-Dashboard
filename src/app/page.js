@@ -46,6 +46,10 @@ const HomePage = () => {
     }
   };
 
+  const totalFemale =
+    data?.user?.data.filter((u) => u.gender === "FEMALE").length || 0;
+  const totalMale = data?.user?.data.length - totalFemale || 0;
+
   return (
     <Box
       display="flex"
@@ -60,8 +64,16 @@ const HomePage = () => {
       <Typography variant="body1" gutterBottom>
         Total Users:
         <span className="text-violet-600 p-3 m-2">
-          {data?.user?.data.length}
+          {data?.user?.data.length || "Login first"}
         </span>
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        Total Females:
+        <span className="text-violet-600 p-3 m-2">{totalFemale}</span>
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        Total Males:
+        <span className="text-violet-600 p-3 m-2">{totalMale}</span>
       </Typography>
       {user ? (
         <>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -23,18 +23,25 @@ const TableComponent = ({ users, loggedInUser }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [localUsers, setLocalUsers] = useState(users);
+  const [isAdmin, setIsAdmin] = useState(false);
   let sr_no = 1;
 
-  const handleToggle = async (userId, currentStatus) => {
+  useEffect(() => {
     const authorizedUsers = [
       process.env.NEXT_PUBLIC_INNO_USER_UID,
       process.env.NEXT_PUBLIC_INNO_USER_EMAIL,
+      "srishtymangutte@gmail.com",
     ];
-
     if (
       authorizedUsers.includes(loggedInUser.uid) ||
       authorizedUsers.includes(loggedInUser.email)
     ) {
+      setIsAdmin(true);
+    }
+  }, [loggedInUser]);
+
+  const handleToggle = async (userId, currentStatus) => {
+    if (isAdmin) {
       try {
         const variables = {
           user: { hasPaid: !currentStatus },
@@ -100,6 +107,11 @@ const TableComponent = ({ users, loggedInUser }) => {
               </TableCell>
               <TableCell sx={{ padding: "8px" }}>
                 <Typography variant="h6" sx={{ color: "#ffffff" }}>
+                  Gender
+                </Typography>
+              </TableCell>
+              <TableCell sx={{ padding: "8px" }}>
+                <Typography variant="h6" sx={{ color: "#ffffff" }}>
                   Email
                 </Typography>
               </TableCell>
@@ -142,34 +154,61 @@ const TableComponent = ({ users, loggedInUser }) => {
                   <TableRow key={user.id}>
                     <TableCell sx={{ padding: "4px" }}>{sr_no++}</TableCell>
                     <TableCell sx={{ padding: "4px" }}>{user.name}</TableCell>
-                    <TableCell sx={{ padding: "4px" }}>{user.email}</TableCell>
-                    <TableCell sx={{ padding: "4px" }}>{user.mobile}</TableCell>
+                    <TableCell sx={{ padding: "4px" }}>
+                      <span
+                        className={
+                          user.gender === "FEMALE"
+                            ? "text-teal-500"
+                            : "text-violet-600"
+                        }
+                      >
+                        {user.gender}
+                      </span>
+                    </TableCell>
+                    <TableCell
+                      sx={{ padding: "4px" }}
+                      className={!isAdmin && "blur-sm"}
+                    >
+                      {user.email}
+                    </TableCell>
+
+                    <TableCell
+                      sx={{ padding: "4px" }}
+                      className={!isAdmin && "blur-sm"}
+                    >
+                      {user.mobile}
+                    </TableCell>
+
                     <TableCell sx={{ padding: "4px" }}>
                       {colleges[user.college] || "Unknown"}
                     </TableCell>
                     <TableCell sx={{ padding: "4px" }}>
                       <a
-                        href={user.idCard}
-                        target="_blank"
+                        href={isAdmin && user.idCard}
+                        target={isAdmin ? "_blank" : undefined}
                         rel="noopener noreferrer"
-                        className="text-blue-500 underline hover:text-blue-700"
+                        className={`underline text-blue-500 ${
+                          isAdmin
+                            ? "hover:text-blue-700"
+                            : "hover:text-gray-400 cursor-not-allowed"
+                        } `}
                       >
                         View ID Card
                       </a>
                     </TableCell>
                     <TableCell sx={{ padding: "4px" }}>
-                      {user.receipt ? (
-                        <a
-                          href={user.receipt}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-teal-500 underline hover:text-teal-700"
-                        >
-                          View Receipt
-                        </a>
-                      ) : (
-                        ""
-                      )}
+                      <a
+                        href={isAdmin && user.receipt}
+                        target={isAdmin ? "_blank" : undefined}
+                        rel="noopener noreferrer"
+                        className={`underline text-teal-500  ${
+                          isAdmin
+                            ? "hover:text-teal-700"
+                            : "hover:text-gray-400 cursor-not-allowed"
+                        } `}
+                      >
+                        View Receipt
+                      </a>
                     </TableCell>
                     <TableCell sx={{ padding: "4px" }}>
                       {user.transactionID}
