@@ -184,7 +184,7 @@ const TableComponent = ({ users, loggedInUser }) => {
                     </TableCell>
                     <TableCell sx={{ padding: "4px" }}>
                       <a
-                        href={isAdmin && user.idCard}
+                        href={isAdmin ? user.idCard : undefined}
                         target={isAdmin ? "_blank" : undefined}
                         rel="noopener noreferrer"
                         className={`underline text-blue-500 ${
@@ -198,7 +198,7 @@ const TableComponent = ({ users, loggedInUser }) => {
                     </TableCell>
                     <TableCell sx={{ padding: "4px" }}>
                       <a
-                        href={isAdmin && user.receipt}
+                        href={isAdmin ? user.receipt : undefined}
                         target={isAdmin ? "_blank" : undefined}
                         rel="noopener noreferrer"
                         className={`underline text-teal-500  ${
