@@ -29,19 +29,30 @@ const TableComponent = ({ users, loggedInUser }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [localUsers, setLocalUsers] = useState(users);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isViewer, setIsViewer] = useState(false);
   let sr_no = 1;
 
+  const authorizedUsers = [
+    process.env.NEXT_PUBLIC_INNO_USER_UID,
+    process.env.NEXT_PUBLIC_INNO_USER_EMAIL,
+  ];
+  const viewAuthorisations = [
+    process.env.NEXT_PUBLIC_INNO_VIEWER_EMAIL,
+    "srishtymangutte@gmail.com",
+    "jaiswal2nikhil@gmail.com",
+    "srushtimangutte@gmail.com",
+    "jayeshnayak2003@gmail.com",
+  ];
+
   useEffect(() => {
-    const authorizedUsers = [
-      process.env.NEXT_PUBLIC_INNO_USER_UID,
-      process.env.NEXT_PUBLIC_INNO_USER_EMAIL,
-      "srishtymangutte@gmail.com",
-    ];
     if (
       authorizedUsers.includes(loggedInUser.uid) ||
       authorizedUsers.includes(loggedInUser.email)
     ) {
       setIsAdmin(true);
+    }
+    if (viewAuthorisations.includes(loggedInUser.email)) {
+      setIsViewer(true);
     }
   }, [loggedInUser]);
 
@@ -188,7 +199,12 @@ const TableComponent = ({ users, loggedInUser }) => {
                 user.college !== "671a5be76748c70b7f893ccb" && (
                   <TableRow key={user.id}>
                     <TableCell sx={{ padding: "4px" }}>{sr_no++}</TableCell>
-                    <TableCell sx={{ padding: "4px" }}>{user.name}</TableCell>
+                    <TableCell
+                      sx={{ padding: "4px" }}
+                      className={!isViewer && "blur-sm"}
+                    >
+                      {user.name}
+                    </TableCell>
                     <TableCell sx={{ padding: "4px" }}>
                       <span
                         className={
@@ -202,7 +218,7 @@ const TableComponent = ({ users, loggedInUser }) => {
                     </TableCell>
                     <TableCell
                       sx={{ padding: "4px" }}
-                      className={!isAdmin && "blur-sm"}
+                      className={!isViewer && "blur-sm"}
                     >
                       {user.email}
                     </TableCell>
@@ -219,13 +235,13 @@ const TableComponent = ({ users, loggedInUser }) => {
                     </TableCell>
                     <TableCell sx={{ padding: "4px" }}>
                       <a
-                        href={isAdmin ? user.idCard : undefined}
-                        target={isAdmin ? "_blank" : undefined}
+                        href={isViewer ? user.idCard : undefined}
+                        target={isViewer ? "_blank" : undefined}
                         rel="noopener noreferrer"
                         className={`underline text-blue-500 ${
-                          isAdmin
+                          isViewer
                             ? "hover:text-blue-700"
-                            : "hover:text-gray-400 cursor-not-allowed"
+                            : "text-gray-400 cursor-not-allowed"
                         } `}
                       >
                         View ID Card
@@ -233,22 +249,28 @@ const TableComponent = ({ users, loggedInUser }) => {
                     </TableCell>
                     <TableCell sx={{ padding: "4px" }}>
                       <a
-                        href={isAdmin ? user.receipt : undefined}
-                        target={isAdmin ? "_blank" : undefined}
+                        href={isViewer ? user.receipt : undefined}
+                        target={isViewer ? "_blank" : undefined}
                         rel="noopener noreferrer"
-                        className={`underline text-teal-500  ${
-                          isAdmin
-                            ? "hover:text-teal-700"
-                            : "hover:text-gray-400 cursor-not-allowed"
+                        className={`underline  ${
+                          isViewer
+                            ? "text-teal-500 hover:text-teal-700"
+                            : "text-gray-400 cursor-not-allowed"
                         } `}
                       >
                         View Receipt
                       </a>
                     </TableCell>
-                    <TableCell sx={{ padding: "4px" }}>
+                    <TableCell
+                      sx={{ padding: "4px" }}
+                      className={!isViewer && "blur-sm"}
+                    >
                       {user.transactionID}
                     </TableCell>
-                    <TableCell sx={{ padding: "4px" }}>
+                    <TableCell
+                      sx={{ padding: "4px" }}
+                      className={!isViewer && "blur-sm"}
+                    >
                       <Switch
                         checked={user.hasPaid}
                         onChange={() => handleToggle(user.id, user.hasPaid)}
@@ -257,7 +279,7 @@ const TableComponent = ({ users, loggedInUser }) => {
                       {user.hasPaid ? "Yes" : "No"}
                     </TableCell>
 
-                    <TableCell>
+                    <TableCell className={!isViewer && "blur-sm"}>
                       <Select
                         value={user.city || ""}
                         onChange={(e) =>
