@@ -13,14 +13,19 @@ import {
   Alert,
   TextField,
   Box,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { useMutation } from "@apollo/client";
-import { UPDATE_USER_MUTATION } from "@/graphQL/updateUser";
+import { UPDATE_USER_MUTATION, ADD_USER_HALL } from "@/graphQL/updateUser";
 import colleges from "@/config/data/colleges";
+import { MaleHostels, FemaleHostels } from "@/config/data/Halls";
 
 const TableComponent = ({ users, loggedInUser }) => {
   const [updateUser] = useMutation(UPDATE_USER_MUTATION);
+  const [updateUserHall] = useMutation(ADD_USER_HALL);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [localUsers, setLocalUsers] = useState(users);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -39,6 +44,30 @@ const TableComponent = ({ users, loggedInUser }) => {
       setIsAdmin(true);
     }
   }, [loggedInUser]);
+
+  const handleCityChange = async (userId, city) => {
+    if (isAdmin) {
+      try {
+        const { data } = await updateUserHall({
+          variables: {
+            updateUserId: userId,
+            user: { city: city },
+          },
+        });
+        setSnackbarMessage(
+          `Successfully Hall updated to ${data.updateUser.city}`
+        );
+        setSnackbarOpen(true);
+      } catch (error) {
+        console.error("Error updating user:", error);
+        setSnackbarMessage("Failed to update city");
+        setSnackbarOpen(true);
+      }
+    } else {
+      setSnackbarOpen(true);
+      setSnackbarMessage("You are not authorized to update Hall");
+    }
+  };
 
   const handleToggle = async (userId, currentStatus) => {
     if (isAdmin) {
@@ -61,6 +90,7 @@ const TableComponent = ({ users, loggedInUser }) => {
       }
     } else {
       setSnackbarOpen(true);
+      setSnackbarMessage("You are not authorized to update payment status");
     }
   };
 
@@ -145,6 +175,11 @@ const TableComponent = ({ users, loggedInUser }) => {
                   Has Paid
                 </Typography>
               </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: "#ffffff" }}>
+                  Hall
+                </Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -173,13 +208,13 @@ const TableComponent = ({ users, loggedInUser }) => {
                     </TableCell>
 
                     <TableCell
-                      sx={{ padding: "4px" }}
+                      sx={{ padding: "4px", color: "#305353" }}
                       className={!isAdmin && "blur-sm"}
                     >
                       {user.mobile}
                     </TableCell>
 
-                    <TableCell sx={{ padding: "4px" }}>
+                    <TableCell sx={{ padding: "4px", color: "#a0a0a0" }}>
                       {colleges[user.college] || "Unknown"}
                     </TableCell>
                     <TableCell sx={{ padding: "4px" }}>
@@ -221,6 +256,29 @@ const TableComponent = ({ users, loggedInUser }) => {
                       />
                       {user.hasPaid ? "Yes" : "No"}
                     </TableCell>
+
+                    <TableCell>
+                      <Select
+                        value={user.city || ""}
+                        onChange={(e) =>
+                          handleCityChange(user.id, e.target.value)
+                        }
+                        displayEmpty
+                        sx={{ width: 120 }}
+                      >
+                        <MenuItem value="" disabled>
+                          {user.city || "Select Hall"}
+                        </MenuItem>
+                        {(user.gender === "MALE"
+                          ? MaleHostels
+                          : FemaleHostels
+                        ).map((city) => (
+                          <MenuItem key={city} value={city}>
+                            {city}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </TableCell>
                   </TableRow>
                 )
             )}
@@ -230,15 +288,15 @@ const TableComponent = ({ users, loggedInUser }) => {
 
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={handleSnackbarClose}
       >
         <Alert
           onClose={handleSnackbarClose}
-          severity="error"
-          sx={{ width: "100%" }}
+          severity={snackbarMessage.startsWith("You") ? "error" : "success"}
+          sx={{ width: "100%", height: "120px" }}
         >
-          You&apos;re not authorized to change this!
+          {snackbarMessage}
         </Alert>
       </Snackbar>
     </>
