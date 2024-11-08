@@ -37,7 +37,7 @@ const TableComponent = ({ users, loggedInUser }) => {
     process.env.NEXT_PUBLIC_INNO_USER_EMAIL,
   ];
   const viewAuthorisations = [
-    process.env.NEXT_PUBLIC_INNO_VIEWER_EMAIL,
+    process.env.NEXT_PUBLIC_INNO_USER_EMAIL,
     "srishtymangutte@gmail.com",
     "jaiswal2nikhil@gmail.com",
     "srushtimangutte@gmail.com",
