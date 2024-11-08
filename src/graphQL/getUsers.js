@@ -15,6 +15,7 @@ export const GET_USERS_QUERY = gql`
         receipt
         transactionID
         hasPaid
+        city
       }
     }
   }

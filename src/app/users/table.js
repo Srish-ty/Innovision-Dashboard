@@ -264,10 +264,13 @@ const TableComponent = ({ users, loggedInUser }) => {
                           handleCityChange(user.id, e.target.value)
                         }
                         displayEmpty
-                        sx={{ width: 120 }}
+                        sx={{
+                          width: 120,
+                          height: 40,
+                        }}
                       >
                         <MenuItem value="" disabled>
-                          {user.city || "Select Hall"}
+                          {user.city || "not selected"}
                         </MenuItem>
                         {(user.gender === "MALE"
                           ? MaleHostels
