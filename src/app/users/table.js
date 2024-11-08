@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -13,28 +13,64 @@ import {
   Alert,
   TextField,
   Box,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { useMutation } from "@apollo/client";
-import { UPDATE_USER_MUTATION } from "@/graphQL/updateUser";
+import { UPDATE_USER_MUTATION, ADD_USER_HALL } from "@/graphQL/updateUser";
 import colleges from "@/config/data/colleges";
+import { MaleHostels, FemaleHostels } from "@/config/data/Halls";
 
 const TableComponent = ({ users, loggedInUser }) => {
   const [updateUser] = useMutation(UPDATE_USER_MUTATION);
+  const [updateUserHall] = useMutation(ADD_USER_HALL);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [localUsers, setLocalUsers] = useState(users);
+  const [isAdmin, setIsAdmin] = useState(false);
   let sr_no = 1;
 
-  const handleToggle = async (userId, currentStatus) => {
+  useEffect(() => {
     const authorizedUsers = [
       process.env.NEXT_PUBLIC_INNO_USER_UID,
       process.env.NEXT_PUBLIC_INNO_USER_EMAIL,
+      "srishtymangutte@gmail.com",
     ];
-
     if (
       authorizedUsers.includes(loggedInUser.uid) ||
       authorizedUsers.includes(loggedInUser.email)
     ) {
+      setIsAdmin(true);
+    }
+  }, [loggedInUser]);
+
+  const handleCityChange = async (userId, city) => {
+    if (isAdmin) {
+      try {
+        const { data } = await updateUserHall({
+          variables: {
+            updateUserId: userId,
+            user: { city: city },
+          },
+        });
+        setSnackbarMessage(
+          `Successfully Hall updated to ${data.updateUser.city}`
+        );
+        setSnackbarOpen(true);
+      } catch (error) {
+        console.error("Error updating user:", error);
+        setSnackbarMessage("Failed to update city");
+        setSnackbarOpen(true);
+      }
+    } else {
+      setSnackbarOpen(true);
+      setSnackbarMessage("You are not authorized to update Hall");
+    }
+  };
+
+  const handleToggle = async (userId, currentStatus) => {
+    if (isAdmin) {
       try {
         const variables = {
           user: { hasPaid: !currentStatus },
@@ -54,6 +90,7 @@ const TableComponent = ({ users, loggedInUser }) => {
       }
     } else {
       setSnackbarOpen(true);
+      setSnackbarMessage("You are not authorized to update payment status");
     }
   };
 
@@ -100,6 +137,11 @@ const TableComponent = ({ users, loggedInUser }) => {
               </TableCell>
               <TableCell sx={{ padding: "8px" }}>
                 <Typography variant="h6" sx={{ color: "#ffffff" }}>
+                  Gender
+                </Typography>
+              </TableCell>
+              <TableCell sx={{ padding: "8px" }}>
+                <Typography variant="h6" sx={{ color: "#ffffff" }}>
                   Email
                 </Typography>
               </TableCell>
@@ -133,6 +175,11 @@ const TableComponent = ({ users, loggedInUser }) => {
                   Has Paid
                 </Typography>
               </TableCell>
+              <TableCell>
+                <Typography variant="h6" sx={{ color: "#ffffff" }}>
+                  Hall
+                </Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -142,34 +189,61 @@ const TableComponent = ({ users, loggedInUser }) => {
                   <TableRow key={user.id}>
                     <TableCell sx={{ padding: "4px" }}>{sr_no++}</TableCell>
                     <TableCell sx={{ padding: "4px" }}>{user.name}</TableCell>
-                    <TableCell sx={{ padding: "4px" }}>{user.email}</TableCell>
-                    <TableCell sx={{ padding: "4px" }}>{user.mobile}</TableCell>
                     <TableCell sx={{ padding: "4px" }}>
+                      <span
+                        className={
+                          user.gender === "FEMALE"
+                            ? "text-teal-500"
+                            : "text-violet-600"
+                        }
+                      >
+                        {user.gender}
+                      </span>
+                    </TableCell>
+                    <TableCell
+                      sx={{ padding: "4px" }}
+                      className={!isAdmin && "blur-sm"}
+                    >
+                      {user.email}
+                    </TableCell>
+
+                    <TableCell
+                      sx={{ padding: "4px", color: "#305353" }}
+                      className={!isAdmin && "blur-sm"}
+                    >
+                      {user.mobile}
+                    </TableCell>
+
+                    <TableCell sx={{ padding: "4px", color: "#a0a0a0" }}>
                       {colleges[user.college] || "Unknown"}
                     </TableCell>
                     <TableCell sx={{ padding: "4px" }}>
                       <a
-                        href={user.idCard}
-                        target="_blank"
+                        href={isAdmin ? user.idCard : undefined}
+                        target={isAdmin ? "_blank" : undefined}
                         rel="noopener noreferrer"
-                        className="text-blue-500 underline hover:text-blue-700"
+                        className={`underline text-blue-500 ${
+                          isAdmin
+                            ? "hover:text-blue-700"
+                            : "hover:text-gray-400 cursor-not-allowed"
+                        } `}
                       >
                         View ID Card
                       </a>
                     </TableCell>
                     <TableCell sx={{ padding: "4px" }}>
-                      {user.receipt ? (
-                        <a
-                          href={user.receipt}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-teal-500 underline hover:text-teal-700"
-                        >
-                          View Receipt
-                        </a>
-                      ) : (
-                        ""
-                      )}
+                      <a
+                        href={isAdmin ? user.receipt : undefined}
+                        target={isAdmin ? "_blank" : undefined}
+                        rel="noopener noreferrer"
+                        className={`underline text-teal-500  ${
+                          isAdmin
+                            ? "hover:text-teal-700"
+                            : "hover:text-gray-400 cursor-not-allowed"
+                        } `}
+                      >
+                        View Receipt
+                      </a>
                     </TableCell>
                     <TableCell sx={{ padding: "4px" }}>
                       {user.transactionID}
@@ -182,6 +256,32 @@ const TableComponent = ({ users, loggedInUser }) => {
                       />
                       {user.hasPaid ? "Yes" : "No"}
                     </TableCell>
+
+                    <TableCell>
+                      <Select
+                        value={user.city || ""}
+                        onChange={(e) =>
+                          handleCityChange(user.id, e.target.value)
+                        }
+                        displayEmpty
+                        sx={{
+                          width: 120,
+                          height: 40,
+                        }}
+                      >
+                        <MenuItem value="" disabled>
+                          {user.city || "not selected"}
+                        </MenuItem>
+                        {(user.gender === "MALE"
+                          ? MaleHostels
+                          : FemaleHostels
+                        ).map((city) => (
+                          <MenuItem key={city} value={city}>
+                            {city}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </TableCell>
                   </TableRow>
                 )
             )}
@@ -191,15 +291,15 @@ const TableComponent = ({ users, loggedInUser }) => {
 
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={handleSnackbarClose}
       >
         <Alert
           onClose={handleSnackbarClose}
-          severity="error"
-          sx={{ width: "100%" }}
+          severity={snackbarMessage.startsWith("You") ? "error" : "success"}
+          sx={{ width: "100%", height: "120px" }}
         >
-          You&apos;re not authorized to change this!
+          {snackbarMessage}
         </Alert>
       </Snackbar>
     </>

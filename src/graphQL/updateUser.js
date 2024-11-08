@@ -7,3 +7,11 @@ export const UPDATE_USER_MUTATION = gql`
     }
   }
 `;
+
+export const ADD_USER_HALL = gql`
+  mutation Mutation($updateUserId: ID!, $user: UserUpdateInputType!) {
+    updateUser(id: $updateUserId, user: $user) {
+      city
+    }
+  }
+`;

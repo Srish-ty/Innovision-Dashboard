@@ -8,12 +8,14 @@ export const GET_USERS_QUERY = gql`
         id
         email
         name
+        gender
         mobile
         college
         idCard
         receipt
         transactionID
         hasPaid
+        city
       }
     }
   }

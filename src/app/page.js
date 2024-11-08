@@ -46,6 +46,14 @@ const HomePage = () => {
     }
   };
 
+  const nonNITRstudents = data?.user?.data.filter(
+    (u) => u.college !== "671a5be76748c70b7f893ccb"
+  );
+
+  const totalFemale =
+    nonNITRstudents?.filter((u) => u.gender === "FEMALE").length || 0;
+  const totalMale = nonNITRstudents?.length - totalFemale || 0;
+
   return (
     <Box
       display="flex"
@@ -59,9 +67,24 @@ const HomePage = () => {
       </Typography>
       <Typography variant="body1" gutterBottom>
         Total Users:
-        <span className="text-violet-600 p-3 m-2">
-          {data?.user?.data.length}
+        <span className="text-violet-300 p-3 m-2">
+          {data?.user?.data.length || "Login first"}
         </span>
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        Total Non-NITR Students:
+        <span className="text-teal-700 p-3 m-2">
+          {nonNITRstudents?.length || "Login first"}
+        </span>
+      </Typography>
+
+      <Typography variant="body1" gutterBottom>
+        Total Females:
+        <span className="text-violet-600 p-3 m-2">{totalFemale}</span>
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        Total Males:
+        <span className="text-violet-600 p-3 m-2">{totalMale}</span>
       </Typography>
       {user ? (
         <>
